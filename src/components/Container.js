@@ -5,23 +5,29 @@ import DraggedItem from "./DraggedItem";
 
 const Container = () => {
   const [items, setItems] = useState([]);
-  const [isDraggingOverElement, setIsDraggingOverElement] = useState(false);
+  const [isDraggingOverElement, setIsDraggingOverElement] =
+    useState("container");
+  const [dimensionsArray, setDimensionsArray] = useState({});
 
-  const handleDrop = (event, index) => {
-    if (isDraggingOverElement) {
+  const handleDrop = (event) => {
+    if (isDraggingOverElement === "stack-container") {
       event.preventDefault();
     } else {
       let itemReceived = event.dataTransfer.getData("element");
       itemReceived = JSON.parse(itemReceived);
       const { id, stackable } = itemReceived;
+      const uniqueId = uuidv4();
+
       const newItem = {
-        id: uuidv4(),
+        id: uniqueId,
         title: `Parent Element ${id} ${
           stackable ? "stackable" : "non-stackable"
         } `,
       };
       setItems([...items, newItem]);
-      setIsDraggingOverElement(false);
+
+      if (isDraggingOverElement === "stack-container")
+        setIsDraggingOverElement("container");
     }
   };
 
@@ -32,7 +38,7 @@ const Container = () => {
   return (
     <div
       className="container"
-      onDrop={(e) => handleDrop(e, items.length)}
+      onDrop={(e) => handleDrop(e)}
       onDragOver={handleDragOver}
     >
       {items?.map((item, index) => (
@@ -43,8 +49,17 @@ const Container = () => {
           index={index}
           isDraggingOverElement={isDraggingOverElement}
           setIsDraggingOverElement={setIsDraggingOverElement}
+          dimensionsArray={dimensionsArray}
+          setDimensionsArray={setDimensionsArray}
         />
       ))}
+      <button
+        onClick={() =>
+          console.log({ items, isDraggingOverElement, dimensionsArray })
+        }
+      >
+        Show
+      </button>
     </div>
   );
 };
