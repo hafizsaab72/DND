@@ -49,6 +49,7 @@
 
 .stack {
   background-color: aqua;
+  overflow: auto;
 }
 
 .sidebarContainer {
@@ -77,4 +78,11 @@
   opacity: 0.75;
   border-radius: 4px;
   cursor: se-resize;
+}
+
+.stack-resize {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
 }
